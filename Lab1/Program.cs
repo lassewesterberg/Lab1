@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using Lab1.Helpers;
 using Lab1.Model;
+using Lab1.ChangeMe.Model;
+using Lab1.ChangeMe.Model.Repository;
+using Lab1.ChangeMe.Model.Repository.Abstract;
 
 namespace Lab1
 {
@@ -16,12 +19,14 @@ namespace Lab1
             // input används för att hålla input från användaren.
             string input;
             // ett InputParser-objekt som har till uppgift att tolka och utföra kommandon från användaren.
-            InputParser inputParser = new InputParser();
-            inputParser.SetDefaultParserState(); // Se Beskrivning av ParserState i InputParser-klassen.
+            Repository Repo = new Repository();
+            InputParser inputParser = new InputParser(Repo);
+           
+            // Se Beskrivning av ParserState i InputParser-klassen.
             // parseResult används för att hålla resultatet av en tolkning från inputParser
             string parseResult;
 
-            Console.WriteLine("\n\nEnter command + [enter] (help: ?):");
+            OutputHelper.Put(OutputHelper.GreetingMessage);
             while (!exit)
             {
                 // Hämta input från användaren

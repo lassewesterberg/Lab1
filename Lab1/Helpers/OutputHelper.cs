@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Lab1.Model;
 
 namespace Lab1.Helpers
 {
@@ -10,6 +11,7 @@ namespace Lab1.Helpers
     /// </summary>
     public class OutputHelper
     {
+        
         /// <summary>
         /// Property som innehåller en textsträng som berättar vilka kommandon som finns tillgängliga
         /// då användaren startat programmet.
@@ -18,13 +20,23 @@ namespace Lab1.Helpers
             get
             {
                 string returnString = "\n\nList of Commands:";
-                returnString += "\n\t?/help:\tPrints this list of commands.";
-                returnString += "\n\texit:\tExits the program.";
+                returnString += "\n\t?/help:\t\tPrints this list of commands.";
+                returnString += "\n\tlog:\t\tShows 10 last commands.";
+                returnString += "\n\tfunc<int,bool>:\tDescription of func<int,bool>.";
+                returnString += "\n\tdictionary:\tDisplays all the interfaces that the type implements.";
+                returnString += "\n\texit:\t\tExits the program.";
 
                 return returnString;
             }
         }
-
+        public static void DictionaryImplements()
+        {
+            Console.WriteLine("\n\nDictionary:\n"); 
+            foreach (Type DictionaryInterfaces in typeof(Dictionary<int, string>).GetInterfaces())
+            {
+                Console.WriteLine(DictionaryInterfaces);
+            }
+        }
         /// <summary>
         /// Metod som returnerar det meddelande som skall visas då programmet avslutas
         /// </summary>
@@ -72,12 +84,18 @@ namespace Lab1.Helpers
         /// <summary>
         /// Property som innehåller ett välkomstmeddelande
         /// </summary>
-        private static string GreetingMessage
+        public static string GreetingMessage
         {
             get
             {
                 return string.Format("\n\nWelcome! {0}", EnterCommand);
             }
+        }
+
+        
+        public static void Put(string PutInput)
+        {
+            Console.WriteLine(PutInput);
         }
     }
 }

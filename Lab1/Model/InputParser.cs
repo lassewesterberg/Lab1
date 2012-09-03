@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lab1.Helpers;
+using Lab1.ChangeMe.Model.Repository;
+using Lab1.ChangeMe.Model.Repository.Abstract;
 
 namespace Lab1.Model
 {
@@ -11,6 +13,20 @@ namespace Lab1.Model
     /// </summary>
     public class InputParser
     {
+        private enum State { Default, Exit };
+
+        State ParserState;
+
+        private IRepository IRepo;
+
+        public InputParser(IRepository IRepoArg)
+        {
+            ParserState = State.Default;
+            IRepo = IRepoArg;
+        }
+        
+        private Logger Logger = new Logger();
+
         /// <summary>
         /// ParserState används för att hålla reda på vilket tillstånd InputParser-objektet
         /// befinner sig i. 
@@ -27,11 +43,12 @@ namespace Lab1.Model
         /// Och -1 som är det tillståndet som InputParser går in i när programmet skall avslutas
         /// Ifall nya tillstånd implementeras skulle de kunna vara 2, 3, 4, etc.
         /// </summary>
-        private int ParserState { get; set; }
+       // private int ParserState { get; set; }
 
         /// <summary>
         /// Sätter ParserState till Default
         /// </summary>
+        /*
         public void SetDefaultParserState()
         {
             ParserState = 1;
@@ -40,14 +57,11 @@ namespace Lab1.Model
         /// <summary>
         /// Returnerar en int som motsvarar Default State
         /// </summary>
-        private int DefaultParserState
-        {
-            get
-            {
-                return 1;
-            }
-        }
+        */
 
+        private State DefaultParserState = State.Default;
+
+        /*
         /// <summary>
         /// Sätter ParserState till Exit
         /// </summary>
@@ -59,17 +73,16 @@ namespace Lab1.Model
         /// <summary>
         /// Returnerar en int som motsvarar Exit State
         /// </summary>
-        private int ExitParserState
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        */
+        
+        State ExitParserState = State.Exit;
+       
+        /*
 
         /// <summary>
         /// Returnerar true om ParserState är Exit (eller rättare sagt -1)
         /// </summary>
+        */
         public bool IsStateExit
         {
             get
@@ -96,7 +109,7 @@ namespace Lab1.Model
             }
             else
             {
-                SetDefaultParserState();
+                ParserState = State.Default;
                 return OutputHelper.ErrorLostState;
             }
         }
@@ -108,15 +121,30 @@ namespace Lab1.Model
         /// <returns></returns>
         private string ParseDefaultStateInput(string input)
         {
+            Logger.Log(input);
             string result;
+            input = input.ToLower();
             switch (input)
             {
                 case "?": // Inget break; eller return; => ramlar igenom till nästa case (dvs. ?/help hanteras likadant)
                 case "help":
                     result = OutputHelper.RootCommandList;
                     break;
+                case "log":
+                    result = "\n\nLog: \n" + Logger.ToString();
+                    break;
+                case "func<int,bool>":
+                    result = "\n\nfunc<int,bool> lagrar anonyma metoder på ett enkelt sätt. De första parametrarna är argument till metoderna och den sista är returvärdet.";
+                    break;
+                case "dictionary":
+                    result = "";
+                    OutputHelper.DictionaryImplements();
+                    break;
+                case "list":
+                    result = "";
+                    break;
                 case "exit":
-                    SetExitParserState(); // Lägg märke till att vi utför en Action här.
+                    ParserState = State.Exit;
                     result = OutputHelper.ExitMessage("Bye!"); // Det går bra att skicka parametrar
                     break;
                 default:
